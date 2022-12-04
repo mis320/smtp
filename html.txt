@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>smtp</title>
+</head>
+
+<style>
+    .center {
+        display: flex;
+        justify-content: center;
+    }
+
+
+    .iframe0 {
+      
+        display: flex;
+        min-width: 500px;
+        max-width: 1500px;
+        min-height: 500px;
+        min-height: 1500px;
+
+    }
+</style>
+
+<body>
+    <div class="center">
+        <input style="max-width: 1500px; min-width: 300px;" id="email" value="" type="text">
+        <input onclick="radomEmail()" type="button" value="生成邮箱地址">
+    </div>
+    <div class="center">
+        <iframe id="iframe0" class="iframe0" src="" frameborder="0">
+        </iframe>
+    </div>
+
+</body>
+<script>
+    const STR = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0"
+    const radomMM = (len) => {
+        let str = ''
+        for (let index = 0; index < len; index++) {
+            const index = parseInt(Math.random() * STR.length)
+            const element = STR[index];
+            str = str + element
+        }
+        return str
+    }
+    const radomEmail = () => {
+        const email = radomMM(16) + "@gmailchain.asia"
+
+
+        $set("email", email)
+        copyText("email")
+
+        
+        console.log(email);
+    }
+    let firsTxt = ""
+    setInterval(async () => {
+        if ($get("email").length > 1) {
+            let url = "http://139.9.92.133:8080/" + $get("email")
+            let res = await fetchx(url)
+            if (firsTxt != res) {
+                $set("iframe0", url)
+                firsTxt = res
+            }
+        }
+    }, 500);
+</script>
+
+
+
+<script>
+    function copyText(nodeId) {
+			//const btn = document.querySelector('.' + str_file);
+			var copy_val = document.getElementById(nodeId)
+			var copy_file = copy_val.innerHTML || copy_val.value
+			const input = document.createElement('input');
+			document.body.appendChild(input);
+			input.setAttribute('value', copy_file);
+			input.select();
+			if (document.execCommand('copy')) {
+				document.execCommand('copy');
+				console.log("success", "success");
+			}
+			document.body.removeChild(input);
+		}
+    async function fetchx(url) {
+        let res = await fetch(url, {
+            "headers": {
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                "accept-language": "zh-CN,zh;q=0.9",
+                "proxy-connection": "keep-alive",
+                "upgrade-insecure-requests": "1"
+            },
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "body": null,
+            "method": "GET",
+            "mode": "cors",
+            "credentials": "omit"
+        }).then(res => res.text());
+
+
+
+        return res
+    }
+
+
+
+    function $set(p1, p2) {
+        let t = document.getElementById(p1);
+        if (
+            t.nodeName.toUpperCase() == 'SPAN' ||
+            t.nodeName.toUpperCase() == 'P'
+        ) {
+            t.innerHTML = p2
+        } else if (t.nodeName.toUpperCase() == 'IMG' || t.nodeName.toUpperCase() == 'IFRAME') {
+            t.src = p2
+        } else {
+            t.value = p2
+        }
+    }
+    function $get(p1) {
+        let t = document.getElementById(p1);
+        if (t.nodeName.toUpperCase() != 'SPAN') {
+            return t.value
+        } else {
+            return t.innerHTML
+        }
+    }
+</script>
+
+</html>
